@@ -1,0 +1,50 @@
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+exports.signUp = async (req, resp, next) => {
+  let name, email, number, password;
+  console.log("in the signup controller");
+
+  try {
+    ({ name, email, number, password } = req.body);
+  } catch (error) {
+    resp.status(404).json({ message: error });
+    return;
+  }
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.create({
+      name: name,
+      email: email,
+      number: number,
+      password: hashedPassword,
+    });
+    resp.status(200).json({ message: "user added" });
+  } catch (error) {
+    resp.status(404).json({ message: error });
+  }
+};
+
+exports.logIn = async (req, resp, next) => {
+  let email, password;
+  try {
+    ({ email, password } = req.body);
+  } catch (error) {
+    resp.status(404).json({ message: "heckar h bhai heckar!" });
+    return;
+  }
+  try {
+    const user = await User.findOne({
+      where: { email: email },
+    });
+    if (user) {
+      const checker = await bcrypt.compare(password, user.password);
+      if (checker) {
+        const token = jwt.sign({ userId: user.id }, "secretkey");
+        resp.status(200).json({ message: user, token: token });
+      }
+    }
+    resp.status(404).json({ message: "invalid passoword or id" });
+  } catch (error) {}
+};
