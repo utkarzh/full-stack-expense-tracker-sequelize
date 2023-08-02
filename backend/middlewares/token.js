@@ -6,10 +6,10 @@ exports.jwtCheck=async (req,resp,next)=>{
   
 
    if(!token){
-    resp.status(401).json({message:'no token,no party!'});
+    throw new Error();
    }
    try{
-   const decodedId= await jwt.verify(token,'secretkey');
+   const decodedId= await jwt.verify(token,process.env.JWTKEY);
 
    const admi=await Users.findOne({where:{id:decodedId.userId}});
 

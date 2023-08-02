@@ -22,10 +22,10 @@ exports.addExpenses = async (req, resp, next) => {
 };
 
 exports.getExpenses = async (req, resp, next) => {
-  console.log('hello i am getexpenses');
+
   try {
     const expenses = await Expense.findAll({where: {UserId:req.id}});
-    console.log(expenses);
+   
     resp.status(200).json({expenses});
   } catch (error) {
     resp.status(404).json({ message: "no expenses found" });
