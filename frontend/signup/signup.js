@@ -23,7 +23,7 @@ form.addEventListener("submit", async function (event) {
     console.log(user);
     var res = await axios.post("http://localhost:3000/signup", user);
     console.log("success");
-    window.location.href = "login.html";
+    window.location.href = "../login/login.html";
   } catch (error) {
     console.log(error);
     alert(

@@ -12,6 +12,7 @@ exports.signUp = async (req, resp, next) => {
     resp.status(404).json({ message: error });
     return;
   }
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
@@ -19,6 +20,7 @@ exports.signUp = async (req, resp, next) => {
       email: email,
       number: number,
       password: hashedPassword,
+      isPremium:false
     });
     resp.status(200).json({ message: "user added" });
   } catch (error) {
@@ -31,7 +33,7 @@ exports.logIn = async (req, resp, next) => {
   try {
     ({ email, password } = req.body);
   } catch (error) {
-    resp.status(404).json({ message: "heckar h bhai heckar!" });
+    resp.status(404).json({ message: "DOM manipulations?? xD" });
     return;
   }
   try {
@@ -43,8 +45,12 @@ exports.logIn = async (req, resp, next) => {
       if (checker) {
         const token = jwt.sign({ userId: user.id }, process.env.JWTKEY);
         resp.status(200).json({ message: user, token: token });
-      }
+      } else
+     { resp.status(404).json({ message: "invalid password" });}
     }
-    resp.status(404).json({ message: "invalid passoword or id" });
+    else{
+      resp.status(404).json({message:"in this timeline,this user doesn't exist!"})
+    }
+   
   } catch (error) {}
 };

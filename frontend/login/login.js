@@ -14,7 +14,7 @@ form.addEventListener("submit", async (e) => {
     const token = res.data.token;
     localStorage.setItem("token", token);
 
-    window.location.href = "dashboard.html";
+    window.location.href = "../dashboard/dashboard.html";
   } catch (error) {
     alert("Invalid username or Password");
   }

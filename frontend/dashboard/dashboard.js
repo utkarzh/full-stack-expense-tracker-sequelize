@@ -4,6 +4,7 @@ const desc = document.getElementById("desc");
 const category = document.getElementById("category");
 const display = document.getElementById("res");
 const premium = document.getElementById("premium");
+const premiumtab = document.getElementById("premium-tab");
 const token = localStorage.getItem("token");
 
 axios.defaults.headers.common["Authorization"] = token;
@@ -25,25 +26,30 @@ form.addEventListener("submit", async (e) => {
 
 premium.addEventListener("click", async () => {
   try {
-    const resp = await axios.get("http://localhost:3000/buypremium");
+    const resp = await axios.post("http://localhost:3000/buypremium");
+
     const order = resp.data;
     var options = {
-      key: order.key_id, // Replace with your Razorpay Key ID
-      amount: order.amount,
-      currency: order.currency,
-      order_id: order.id, // Use the order ID from the response
-      name: "Expense Tracker App",
-      description: "Premium Subscription",
-      handler: function (response) {
-        // Handle the payment success response here (optional)
-        console.log("Payment successful:", response);
+      key: order.key_id,
+      order_id: order.id,
+
+      handler: async function (response) {
+        try {
+          console.log("trying updatestatus..");
+          console.log(response);
+          await axios.post(
+            "http://localhost:3000/updateorderstatus",
+            { orderId: order.id, paymentId: response.razorpay_payment_id }
+          );
+
+        location.reload();
+        } catch (e) {
+          alert("Update failed!money goes brr..");
+        }
       },
-      prefill: {
-        email: "user@example.com",
-      },
-      notes: {},
     };
     const rzp = new Razorpay(options);
+
     rzp.open();
   } catch (error) {
     console.log(error);
@@ -55,6 +61,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await axios.get("http://localhost:3000/expenses");
 
     createItem(res.data.expenses);
+    if (res.data.isPremium) {
+      premiumtab.innerHTML =
+        ' <button class="btn btn-info btn-sm rounded-5" id="leaderboard">Leaderboard <i class="fas fa-crown"></i></button>';
+    }
   } catch (error) {
     alert("unable to fetch records!");
   }
