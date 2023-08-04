@@ -15,7 +15,10 @@ exports.addExpenses = async (req, resp, next) => {
       amount: amount,
       desc: desc,
       category: category,
+    
     });
+    let userExpense_till_now=user.totalExpenses
+    await user.update({totalExpenses:userExpense_till_now+Number(amount)})
     resp.status(200).json({ message: "data added!" });
   } catch (error) {
     resp.status(404).json({ message: "data could not be added" });

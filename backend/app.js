@@ -5,10 +5,11 @@ require("dotenv").config();
 const sequelize = require("./util/database");
 const User = require("./models/User");
 const Expense = require("./models/Expense");
-const Order=require('./models/Order');
+const Order = require("./models/Order");
 const expenseRoutes = require("./routes/expense");
 const authorisationRoutes = require("./routes/authorisation");
 const purchaseRoutes = require("./routes/purchase");
+const premiumRoutes = require("./routes/premiumfeatures");
 User.hasMany(Expense);
 Expense.belongsTo(User);
 User.hasMany(Order);
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(authorisationRoutes);
 app.use(expenseRoutes);
 app.use(purchaseRoutes);
-sequelize.sync().then((_) => {
+app.use("/premium", premiumRoutes);
+sequelize.sync({force:true}).then((_) => {
   app.listen(3000);
 });
