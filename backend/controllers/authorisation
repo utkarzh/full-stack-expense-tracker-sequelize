@@ -20,12 +20,12 @@ exports.signUp = async (req, resp, next) => {
       email: email,
       number: number,
       password: hashedPassword,
-      isPremium:false,
-      totalExpenses:0
+      isPremium: false,
+      totalExpenses: 0,
     });
     resp.status(200).json({ message: "user added" });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     resp.status(404).json({ message: error });
   }
 };
@@ -45,14 +45,18 @@ exports.logIn = async (req, resp, next) => {
     if (user) {
       const checker = await bcrypt.compare(password, user.password);
       if (checker) {
-        const token = jwt.sign({ userId: user.id ,isPremium:user.isPremium}, process.env.JWTKEY);
+        const token = jwt.sign(
+          { userId: user.id, isPremium: user.isPremium },
+          process.env.JWTKEY
+        );
         resp.status(200).json({ message: user, token: token });
-      } else
-     { resp.status(404).json({ message: "invalid password" });}
+      } else {
+        resp.status(404).json({ message: "invalid password" });
+      }
+    } else {
+      resp
+        .status(404)
+        .json({ message: "in this timeline,this user doesn't exist!" });
     }
-    else{
-      resp.status(404).json({message:"in this timeline,this user doesn't exist!"})
-    }
-   
   } catch (error) {}
 };

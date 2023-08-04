@@ -10,7 +10,6 @@ const User = sequelize.define("User", {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
-    
   },
   email: {
     type: Sequelize.STRING,
@@ -26,12 +25,13 @@ const User = sequelize.define("User", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  isPremium:{
-    type:Sequelize.BOOLEAN,
-    allowNull:false
-  },totalExpenses:{
-    type:Sequelize.INTEGER,
-    allowNull:false
-  }
+  isPremium: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+  },
+  totalExpenses: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
-module.exports=User;
+module.exports = User;

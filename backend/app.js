@@ -21,6 +21,6 @@ app.use(authorisationRoutes);
 app.use(expenseRoutes);
 app.use(purchaseRoutes);
 app.use("/premium", premiumRoutes);
-sequelize.sync({force:true}).then((_) => {
+sequelize.sync().then((_) => {
   app.listen(3000);
 });

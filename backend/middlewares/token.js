@@ -3,16 +3,15 @@ const Users = require("../models/User");
 exports.jwtCheck = async (req, resp, next) => {
   const token = req.header("Authorization");
 
-  
   try {
     if (!token) {
-      throw new Error({message:"new error"});
+      throw new Error({ message: "new error" });
     }
     const decodedId = await jwt.verify(token, process.env.JWTKEY);
-    
+
     const admi = await Users.findOne({ where: { id: decodedId.userId } });
-    console.log('wallah')
-    
+    console.log("wallah");
+
     if (admi) {
       req.user = admi;
       next();
@@ -22,30 +21,25 @@ exports.jwtCheck = async (req, resp, next) => {
   }
 };
 
-exports.jwtCheckPremium=async (req, resp, next) => {
+exports.jwtCheckPremium = async (req, resp, next) => {
   const token = req.header("Authorization");
-  console.log('in prem middleware');
+  console.log("in prem middleware");
 
- 
   try {
     let admi;
-   if (!token) {
-     throw new Error({message:"new error"});
+    if (!token) {
+      throw new Error({ message: "new error" });
     }
     const decodedId = await jwt.verify(token, process.env.JWTKEY);
     console.log(decodedId);
-    
-    if(decodedId.isPremium){
-       admi = await Users.findOne({ where: { id: decodedId.userId } });
-       console.log('ha hai ye premium user')
-       next();
-      
+
+    if (decodedId.isPremium) {
+      admi = await Users.findOne({ where: { id: decodedId.userId } });
+      console.log("ha hai ye premium user");
+      next();
     }
-
-
- 
   } catch (error) {
-    console.log('ye nahi hai prem user')
+    console.log("ye nahi hai prem user");
     resp.status(404).json({ message: "You are not a premium user!" });
   }
 };
