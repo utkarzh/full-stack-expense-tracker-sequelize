@@ -10,6 +10,7 @@ const expenseRoutes = require("./routes/expense");
 const authorisationRoutes = require("./routes/authorisation");
 const purchaseRoutes = require("./routes/purchase");
 const premiumRoutes = require("./routes/premiumfeatures");
+const passwordRoutes = require("./routes/password");
 User.hasMany(Expense);
 Expense.belongsTo(User);
 User.hasMany(Order);
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(authorisationRoutes);
 app.use(expenseRoutes);
 app.use(purchaseRoutes);
+app.use("/password", passwordRoutes);
 app.use("/premium", premiumRoutes);
 sequelize.sync().then((_) => {
   app.listen(3000);

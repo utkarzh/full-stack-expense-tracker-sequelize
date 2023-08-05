@@ -26,7 +26,7 @@ form.addEventListener("submit", async (e) => {
     });
     location.reload();
   } catch (error) {
-    alert("Unable to add Expense!");
+    alert("token mei gadbad!");
   }
 });
 
@@ -40,16 +40,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       premiumtab.innerHTML =
         ' <button class="btn btn-warning btn-sm rounded-5" id="premium">Buy Premium <i class="fas fa-gem"></i></button>';
-     console.log('above premium');
-     const premium = document.getElementById("premium");
-        premium.addEventListener("click", buypremium);  //go down for buypremium function definition
-      console.log('below premium')
-      }
+      console.log("above premium");
+      const premium = document.getElementById("premium");
+      premium.addEventListener("click", buypremium); //go down for buypremium function definition
+      console.log("below premium");
+    }
     createItem(res.data.expenses);
-    console.log('after create item')
+    console.log("after create item");
   } catch (error) {
-    console.log(error)
-    alert("unable to fetch records!");
+    console.log(error);
+    alert("token gayab hai!");
   }
 });
 display.addEventListener("click", async (e) => {
@@ -60,7 +60,7 @@ display.addEventListener("click", async (e) => {
       await axios.delete("http://localhost:3000/expenses/" + id);
       location.reload();
     } catch (error) {
-      alert("unable to delete the expense!");
+      alert("api mei dikkat ya fir kuch dom ke sath bakchodi!");
     }
   }
 });
@@ -78,17 +78,19 @@ const buypremium = async (e) => {
         try {
           console.log("trying updatestatus..");
           console.log(response);
-         const reply= await axios.post("http://localhost:3000/updateorderstatus", {
-            orderId: order.id,
-            paymentId: response.razorpay_payment_id,
-          });
-          const newtoken=reply.data.token;
-          
-          localStorage.setItem('token',newtoken);
-          location.reload();
+          const reply = await axios.post(
+            "http://localhost:3000/updateorderstatus",
+            {
+              orderId: order.id,
+              paymentId: response.razorpay_payment_id,
+            }
+          );
+          const newtoken = reply.data.token;
 
+          localStorage.setItem("token", newtoken);
+          location.reload();
         } catch (e) {
-          alert("Update failed!money goes brr..");
+          alert("paise doob gaye..");
         }
       },
     };
@@ -100,7 +102,9 @@ const buypremium = async (e) => {
 };
 
 function createItem(res) {
-  if(res==[]){return}
+  if (res == []) {
+    return;
+  }
 
   res.forEach((item) => {
     const div = document.createElement("div");
