@@ -18,7 +18,6 @@ exports.buyPremium = async (req, resp) => {
   }
 };
 exports.verifyPremium = async (req, resp) => {
-  console.log("yaha tak to aye the");
   const { orderId, paymentId } = req.body;
 
   try {
@@ -35,7 +34,7 @@ exports.verifyPremium = async (req, resp) => {
       order.status = "failed!";
     }
     await Promise.all([order.save(), req.user.update({ isPremium: true })]);
-    console.log("user bhi update ho gaya");
+    console.log("user-bhi-update-ho-gaya");
     console.log("payment handled!");
   } catch (error) {
     console.log("error", error);

@@ -36,6 +36,7 @@ exports.jwtCheckPremium = async (req, resp, next) => {
     if (decodedId.isPremium) {
       admi = await Users.findOne({ where: { id: decodedId.userId } });
       console.log("ha hai ye premium user");
+      req.user = admi;
       next();
     }
   } catch (error) {

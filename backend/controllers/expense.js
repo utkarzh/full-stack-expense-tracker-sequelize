@@ -1,5 +1,39 @@
 const Expense = require("../models/Expense");
 const sequelize = require("../util/database");
+const AWS = require("aws-sdk");
+
+exports.downloadExpense = async (req, resp, next) => {
+  try {
+    user = req.user;
+    const userExpenses_raw = await user.getExpenses();
+    const userExpenses = JSON.stringify(userExpenses_raw);
+    const fileName = `expenses_${user.name}.txt`; // Use an underscore for better readability
+
+    const s3bucket = new AWS.S3({
+      accessKeyId: process.env.AWS_KEY,
+      secretAccessKey: process.env.AWS_SECRET,
+    });
+
+    const params = {
+      Bucket: "expense-tracker-app123",
+      Key: fileName,
+      Body: userExpenses,
+      ACL: "public-read",
+    };
+
+    try {
+      const result = await s3bucket.upload(params).promise();
+      console.log("File uploaded successfully:", result.Location);
+      resp.status(200).json(result.Location);
+    } catch (uploadError) {
+      console.error("Error uploading file:", uploadError.message);
+      resp.status(500).json({ error: "Error uploading file" });
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+    resp.status(500).json({ error: "Internal server error" });
+  }
+};
 
 exports.addExpenses = async (req, resp, next) => {
   let amount, desc, category, user;

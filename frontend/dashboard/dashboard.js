@@ -3,6 +3,7 @@ const amount = document.getElementById("amount");
 const desc = document.getElementById("desc");
 const category = document.getElementById("category");
 const display = document.getElementById("res");
+const downloadtab = document.getElementById("download");
 
 const leaderboard = document.getElementById("leaderboard");
 const premiumtab = document.getElementById("premium-tab");
@@ -37,6 +38,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (res.data.isPremium) {
       premiumtab.innerHTML =
         ' <a class="btn btn-info btn-sm rounded-5" id="leaderboard" href="../leaderboard/leaderboard.html">Leaderboard <i class="fas fa-crown"></i></a>';
+      downloadtab.innerHTML =
+        ' <button class="btn-warning btn" id="download-btn"><i class="fas fa-download"></i> </button>';
+      document
+        .getElementById("download-btn")
+        .addEventListener("click", downloadExpenses);
     } else {
       premiumtab.innerHTML =
         ' <button class="btn btn-warning btn-sm rounded-5" id="premium">Buy Premium <i class="fas fa-gem"></i></button>';
@@ -68,12 +74,10 @@ display.addEventListener("click", async (e) => {
 const buypremium = async (e) => {
   try {
     const resp = await axios.post("http://localhost:3000/buypremium");
-
     const order = resp.data;
     var options = {
-      key: order.key_id,
-      order_id: order.id,
-
+      key: order.key_id, //we can genrate another fraud order
+      order_id: order.id, //via razorpay and paste credentials..
       handler: async function (response) {
         try {
           console.log("trying updatestatus..");
@@ -81,7 +85,7 @@ const buypremium = async (e) => {
           const reply = await axios.post(
             "http://localhost:3000/updateorderstatus",
             {
-              orderId: order.id,
+              orderId: order.id, //But here we send original data,so that backend doesnt know
               paymentId: response.razorpay_payment_id,
             }
           );
@@ -128,4 +132,13 @@ function createItem(res) {
 
     display.prepend(div);
   });
+}
+
+async function downloadExpenses() {
+  try {
+    const res = await axios.get("http://localhost:3000/download");
+    window.location.href = res.data;
+  } catch (error) {
+    console.log(error);
+  }
 }
