@@ -1,10 +1,10 @@
 const express = require("express");
 const route = express.Router();
-const middleware = require("../middlewares/token");
+const jwtCheck = require("../middlewares/jwtCheck");
 const premiumControllers = require("../controllers/premiumfeatures");
 route.get(
   "/leaderboard",
-  middleware.jwtCheckPremium,
+  jwtCheck.jwtCheckPremium,
   premiumControllers.getLeaderboard
 );
 

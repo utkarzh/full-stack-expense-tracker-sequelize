@@ -33,7 +33,7 @@ form.addEventListener("submit", async (e) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await axios.get("http://localhost:3000/expenses");
+    const res = await axios.get("http://localhost:3000/expenses/");
     console.log(res.data);
     if (res.data.isPremium) {
       premiumtab.innerHTML =
@@ -118,7 +118,7 @@ function createItem(res) {
     btn.innerText = "Delete Expense";
     btn.setAttribute("id", item.id);
 
-    div.classList = "container";
+    div.classList = "container justify-content-center";
     div.innerHTML =
       '<div class="row"><div class="col-auto"><li><u>AMOUNT:</u>  <b>' +
       item.amount +
@@ -128,7 +128,7 @@ function createItem(res) {
       item.desc.toUpperCase() +
       "</b></li></div></>";
     div.appendChild(btn);
-    div.appendChild(hr);
+    //div.appendChild(hr);
 
     display.prepend(div);
   });

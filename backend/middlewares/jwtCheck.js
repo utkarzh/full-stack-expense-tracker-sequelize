@@ -10,7 +10,6 @@ exports.jwtCheck = async (req, resp, next) => {
     const decodedId = await jwt.verify(token, process.env.JWTKEY);
 
     const admi = await Users.findOne({ where: { id: decodedId.userId } });
-    console.log("wallah");
 
     if (admi) {
       req.user = admi;

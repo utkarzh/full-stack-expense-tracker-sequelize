@@ -68,13 +68,22 @@ exports.addExpenses = async (req, resp, next) => {
 
 exports.getExpenses = async (req, resp, next) => {
   try {
-    const expenses = await req.user.getExpenses();
+    const pagenumber = parseInt(req.query.page) || 1;
+    const perPage = parseInt(req.query.perPage) || 20;
 
-    resp
-      .status(200)
-      .json({ expenses: expenses, isPremium: req.user.isPremium });
+    const offset = (pagenumber - 1) * perPage;
+
+    const expenses = await req.user.getExpenses({
+      offset: offset,
+      limit: perPage,
+    });
+
+    resp.status(200).json({
+      expenses: expenses,
+      isPremium: req.user.isPremium,
+    });
   } catch (error) {
-    resp.status(404).json({ message: "no expenses found" });
+    resp.status(500).json({ message: "An error occurred" });
   }
 };
 
